@@ -7,7 +7,7 @@
 	<version>0.0.2-SNAPSHOT</version>
 	<name>Mangoo I/O Elasticsearch extension</name>
 	<description>Elasticsearch extension for Mangoo I/O</description>
-	<url>https://github.com/MarkVink/mangooio-elasticsearch-extention</url>
+	<url>https://github.com/MarkVink/mangooio-elasticsearch-extension</url>
 	<properties>
 		<mangooio.version>2.3.1</mangooio.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,9 +22,9 @@
 		<maven>3.3.0</maven>
 	</prerequisites>
 	<scm>
-		<connection>scm:git:git@github.com:MarkVink/mangooio-elasticsearch-extention.git</connection>
-		<developerConnection>scm:git:git@github.com:MarkVink/mangooio-elasticsearch-extention.git</developerConnection>
-		<url>https://github.com/MarkVink/mangooio-elasticsearch-extention</url>
+		<connection>scm:git:git@github.com:MarkVink/mangooio-elasticsearch-extension.git</connection>
+		<developerConnection>scm:git:git@github.com:MarkVink/mangooio-elasticsearch-extension.git</developerConnection>
+		<url>https://github.com/MarkVink/mangooio-elasticsearch-extension</url>
 		<tag>HEAD</tag>
 	</scm>
 	<build>
