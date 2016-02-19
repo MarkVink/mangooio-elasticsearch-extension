@@ -21,6 +21,12 @@
 	<prerequisites>
 		<maven>3.3.0</maven>
 	</prerequisites>
+	<scm>
+		<connection>scm:git:git@github.com:MarkVink/mangooio-elasticsearch-extention.git</connection>
+		<developerConnection>scm:git:git@github.com:MarkVink/mangooio-elasticsearch-extention.git</developerConnection>
+		<url>https://github.com/MarkVink/mangooio-elasticsearch-extention</url>
+		<tag>HEAD</tag>
+	</scm>
 	<build>
 		<plugins>
 			<plugin>
