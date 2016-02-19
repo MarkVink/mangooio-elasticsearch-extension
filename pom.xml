@@ -7,7 +7,9 @@
 	<artifactId>mangooio-elasticsearch-extension</artifactId>
 	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mangoo I/O Elasticsearch extension</name>
+	<name>Mangoo I/O Elasticsearch extension</name>
+	<description>Elasticsearch extension for Mangoo I/O</description>
+	<url>https://github.com/MarkVink/mangooio-elasticsearch-extention</url>
 	<properties>
 		<mangooio.version>2.3.1</mangooio.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -142,4 +144,14 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 </project>
