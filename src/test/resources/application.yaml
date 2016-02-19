@@ -35,7 +35,7 @@ test:
     smtp:
         port       : 3055
     elasticsearch:
-        cluser:
+        cluster:
             name: test-cluster
         node:
             host: 127.0.0.1
