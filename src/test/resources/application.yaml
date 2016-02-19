@@ -34,3 +34,15 @@ test:
         port       : 10808
     smtp:
         port       : 3055
+    elasticsearch:
+        cluser:
+            name: test-cluster
+        node:
+            host: 127.0.0.1
+            post: 9300
+        client:
+            transport:
+                sniff: false
+                ignore_cluster_name: true
+                ping_timeout: 5s
+                nodes_sampler_interval: 5s

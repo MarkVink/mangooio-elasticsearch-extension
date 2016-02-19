@@ -29,12 +29,12 @@ public class Elasticsearch {
 
         Builder settings = Settings.settingsBuilder();
         settings.put("cluster.name", config.getString(CONFIG_PREFIX.concat(".cluster.name")));
-        settings.put("client.transport.sniff", config.getString(CONFIG_PREFIX.concat(".client.transport.sniff")));
+        settings.put("client.transport.sniff", config.getBoolean(CONFIG_PREFIX.concat(".client.transport.sniff"), false));
         settings.put("client.transport.ignore_cluster_name",
-                config.getBoolean(CONFIG_PREFIX.concat(".client.transport.ignore_cluster_name")));
+                config.getBoolean(CONFIG_PREFIX.concat(".client.transport.ignore_cluster_name"), true));
         settings.put("client.transport.ping_timeout", config.getString(CONFIG_PREFIX.concat(".client.transport.ping_timeout"), "5s"));
         settings.put("client.transport.nodes_sampler_interval",
-                config.getBoolean(CONFIG_PREFIX.concat(".client.transport.nodes_sampler_interval")));
+                config.getString(CONFIG_PREFIX.concat(".client.transport.nodes_sampler_interval"), "5s"));
 
         transportClient = TransportClient.builder().settings(settings).build();
 
