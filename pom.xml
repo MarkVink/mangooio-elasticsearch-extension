@@ -4,7 +4,7 @@
 	<groupId>com.markvink</groupId>
 	<artifactId>mangooio-elasticsearch-extension</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>Mangoo I/O Elasticsearch extension</name>
 	<description>Elasticsearch extension for Mangoo I/O</description>
 	<url>https://github.com/MarkVink/mangooio-elasticsearch-extension</url>
@@ -31,7 +31,7 @@
 		<connection>scm:git:git@github.com:MarkVink/mangooio-elasticsearch-extension.git</connection>
 		<developerConnection>scm:git:git@github.com:MarkVink/mangooio-elasticsearch-extension.git</developerConnection>
 		<url>https://github.com/MarkVink/mangooio-elasticsearch-extension</url>
-		<tag>0.0.2</tag>
+		<tag>HEAD</tag>
 	</scm>
 	<build>
 		<plugins>
