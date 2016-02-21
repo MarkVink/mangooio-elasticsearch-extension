@@ -1,6 +1,7 @@
 package com.markvink.mangooio.elasticsearch;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -28,7 +29,6 @@ import org.junit.Test;
 public class ElasticsearchTest {
 
     private final Client mockClient = mock(Client.class, RETURNS_DEEP_STUBS);
-
     private final Elasticsearch elasticsearch = new Elasticsearch(mockClient);
 
     private final static String INDEX = "my-test-index";
@@ -37,6 +37,7 @@ public class ElasticsearchTest {
 
     @Test
     public void getClientTest() {
+        assertNotNull(elasticsearch.getClient());
         assertEquals(elasticsearch.getClient(), mockClient);
     }
 
