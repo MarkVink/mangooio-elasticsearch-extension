@@ -1,6 +1,9 @@
 package com.markvink.mangooio.elasticsearch.document;
 
-public interface DocumentWithId extends DocumentWithoutId {
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+public interface DocumentWithId extends Document {
+
+    @JsonIgnore
     public String getDocumentId();
 }

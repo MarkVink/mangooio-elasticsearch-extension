@@ -1,12 +1,11 @@
 package com.markvink.mangooio.elasticsearch.document;
 
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public interface DocumentWithoutId {
+public interface Document {
 
+    @JsonIgnore
     default String getDocumentType() {
         return this.getClass().getSimpleName();
     }
-
-    public Map<String, Object> getDocumentContent();
 }

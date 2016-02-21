@@ -3,8 +3,12 @@ package com.markvink.mangooio.elasticsearch;
 import java.net.InetAddress;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequestBuilder;
@@ -13,21 +17,29 @@ import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.markvink.mangooio.elasticsearch.client.ClientWrapper;
 import com.markvink.mangooio.elasticsearch.client.NodeClientWrapper;
 import com.markvink.mangooio.elasticsearch.client.TransportClientWrapper;
+import com.markvink.mangooio.elasticsearch.document.Document;
 import com.markvink.mangooio.elasticsearch.document.DocumentWithId;
-import com.markvink.mangooio.elasticsearch.document.DocumentWithoutId;
+import com.markvink.mangooio.elasticsearch.document.DocumentWithSource;
 
 import io.mangoo.configuration.Config;
 
 @Singleton
 public class Elasticsearch implements ClientWrapper {
+
+    private static final Logger LOG = LogManager.getLogger(Elasticsearch.class);
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     private static final String CONFIG_PREFIX = "elasticsearch";
 
-    private ClientWrapper clientWrapper;
+    private final ClientWrapper clientWrapper;
 
     @Inject
     public Elasticsearch(Config config) {
@@ -44,9 +56,9 @@ public class Elasticsearch implements ClientWrapper {
         return clientWrapper.getClient();
     }
 
-    public void addNewNode(InetAddress address, int port) {
+    public void addNode(InetAddress address, int port) {
         if (clientWrapper instanceof TransportClientWrapper) {
-            ((TransportClientWrapper) clientWrapper).addNewNode(address, port);
+            ((TransportClientWrapper) clientWrapper).addNode(address, port);
         }
     }
 
@@ -57,19 +69,31 @@ public class Elasticsearch implements ClientWrapper {
     }
 
     public CreateIndexResponse createIndex(String indexName) {
-        CreateIndexRequestBuilder createIndexRequestBuilder = getClient().admin().indices().prepareCreate(indexName);
-        return createIndexRequestBuilder.execute().actionGet();
+        IndicesExistsResponse indicesExistsResponse = getClient().admin().indices().exists(new IndicesExistsRequest(indexName)).actionGet();
+        if (!indicesExistsResponse.isExists()) {
+            CreateIndexRequestBuilder createIndexRequestBuilder = getClient().admin().indices().prepareCreate(indexName);
+            return createIndexRequestBuilder.execute().actionGet();
+        }
+        return null;
     }
 
-    public IndexResponse indexDocument(String indexName, DocumentWithoutId document) {
+    public IndexResponse indexDocument(String indexName, Document document) {
         IndexRequestBuilder indexRequestBuilder = getClient().prepareIndex(indexName, document.getDocumentType());
-        indexRequestBuilder.setSource(document.getDocumentContent());
-        return indexRequestBuilder.execute().actionGet();
-    }
+        if (document instanceof DocumentWithId) {
+            indexRequestBuilder = getClient().prepareIndex(indexName, document.getDocumentType(),
+                    ((DocumentWithId) document).getDocumentId());
+        }
 
-    public IndexResponse indexDocument(String indexName, DocumentWithId document) {
-        IndexRequestBuilder indexRequestBuilder = getClient().prepareIndex(indexName, document.getDocumentType(), document.getDocumentId());
-        indexRequestBuilder.setSource(document.getDocumentContent());
+        if (document instanceof DocumentWithSource) {
+            indexRequestBuilder.setSource(((DocumentWithSource) document).getDocumentSource());
+        } else {
+            try {
+                indexRequestBuilder.setSource(mapper.writeValueAsBytes(document));
+            } catch (JsonProcessingException e) {
+                LOG.error("Error converting source of document", e);
+            }
+        }
+
         return indexRequestBuilder.execute().actionGet();
     }
 

@@ -36,13 +36,7 @@ test:
         port       : 3055
     elasticsearch:
         cluster:
-            name: test-cluster
-        node:
-            host: 127.0.0.1
-            post: 9300
-        client:
-            transport:
-                sniff: false
-                ignore_cluster_name: true
-                ping_timeout: 5s
-                nodes_sampler_interval: 5s
+            name: elasticsearch
+        index:
+            store:
+                type : memory
