@@ -9,9 +9,7 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
-import org.elasticsearch.action.delete.DeleteRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.get.GetRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.index.IndexResponse;
@@ -22,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.markvink.mangooio.elasticsearch.client.ClientWrapper;
+import com.markvink.mangooio.elasticsearch.client.DirectClientWrapper;
 import com.markvink.mangooio.elasticsearch.client.NodeClientWrapper;
 import com.markvink.mangooio.elasticsearch.client.TransportClientWrapper;
 import com.markvink.mangooio.elasticsearch.document.Document;
@@ -40,6 +39,15 @@ public class Elasticsearch implements ClientWrapper {
     private static final String CONFIG_PREFIX = "elasticsearch";
 
     private final ClientWrapper clientWrapper;
+
+    /**
+     * 
+     * @param client
+     *            the client to pass along
+     */
+    public Elasticsearch(Client client) {
+        clientWrapper = new DirectClientWrapper(client);
+    }
 
     /**
      *
@@ -151,8 +159,7 @@ public class Elasticsearch implements ClientWrapper {
      * @return the document
      */
     public GetResponse getDocument(String indexName, String documentType, String documentId) {
-        GetRequestBuilder getRequestBuilder = getClient().prepareGet(indexName, documentType, documentId);
-        return getRequestBuilder.execute().actionGet();
+        return getClient().prepareGet(indexName, documentType, documentId).execute().actionGet();
     }
 
     /**
@@ -167,7 +174,6 @@ public class Elasticsearch implements ClientWrapper {
      * @return the delete response
      */
     public DeleteResponse deleteDocument(String indexName, String documentType, String documentId) {
-        DeleteRequestBuilder deleteRequestBuilder = getClient().prepareDelete(indexName, documentType, documentId);
-        return deleteRequestBuilder.execute().actionGet();
+        return getClient().prepareDelete(indexName, documentType, documentId).execute().actionGet();
     }
 }
