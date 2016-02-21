@@ -41,6 +41,11 @@ public class Elasticsearch implements ClientWrapper {
 
     private final ClientWrapper clientWrapper;
 
+    /**
+     *
+     * @param config
+     *            the config from Mangoo I/O
+     */
     @Inject
     public Elasticsearch(Config config) {
         String host = config.getString(CONFIG_PREFIX.concat(".node.host"));
@@ -51,23 +56,51 @@ public class Elasticsearch implements ClientWrapper {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.markvink.mangooio.elasticsearch.client.ClientWrapper#getClient()
+     */
     @Override
     public Client getClient() {
         return clientWrapper.getClient();
     }
 
+    /**
+     * Adds the node.
+     *
+     * @param address
+     *            the address of the Elasticsearch node
+     * @param port
+     *            the port of the Elasticsearch node
+     */
     public void addNode(InetAddress address, int port) {
         if (clientWrapper instanceof TransportClientWrapper) {
             ((TransportClientWrapper) clientWrapper).addNode(address, port);
         }
     }
 
+    /**
+     * Removes the node.
+     *
+     * @param address
+     *            the address of the Elasticsearch node
+     * @param port
+     *            the port of the Elasticsearch node
+     */
     public void removeNode(InetAddress address, int port) {
         if (clientWrapper instanceof TransportClientWrapper) {
             ((TransportClientWrapper) clientWrapper).removeNode(address, port);
         }
     }
 
+    /**
+     * Creates an search index
+     *
+     * @param indexName
+     *            the index name
+     * @return the creates the index response
+     */
     public CreateIndexResponse createIndex(String indexName) {
         IndicesExistsResponse indicesExistsResponse = getClient().admin().indices().exists(new IndicesExistsRequest(indexName)).actionGet();
         if (!indicesExistsResponse.isExists()) {
@@ -77,6 +110,15 @@ public class Elasticsearch implements ClientWrapper {
         return null;
     }
 
+    /**
+     * Index an document.
+     *
+     * @param indexName
+     *            the index name
+     * @param document
+     *            the document
+     * @return the index response
+     */
     public IndexResponse indexDocument(String indexName, Document document) {
         IndexRequestBuilder indexRequestBuilder = getClient().prepareIndex(indexName, document.getDocumentType());
         if (document instanceof DocumentWithId) {
@@ -97,11 +139,33 @@ public class Elasticsearch implements ClientWrapper {
         return indexRequestBuilder.execute().actionGet();
     }
 
+    /**
+     * Gets an document based on his identifier
+     *
+     * @param indexName
+     *            the index name
+     * @param documentType
+     *            the document type
+     * @param documentId
+     *            the document id
+     * @return the document
+     */
     public GetResponse getDocument(String indexName, String documentType, String documentId) {
         GetRequestBuilder getRequestBuilder = getClient().prepareGet(indexName, documentType, documentId);
         return getRequestBuilder.execute().actionGet();
     }
 
+    /**
+     * Delete an document based on his identifier
+     *
+     * @param indexName
+     *            the index name
+     * @param documentType
+     *            the document type
+     * @param documentId
+     *            the document id
+     * @return the delete response
+     */
     public DeleteResponse deleteDocument(String indexName, String documentType, String documentId) {
         DeleteRequestBuilder deleteRequestBuilder = getClient().prepareDelete(indexName, documentType, documentId);
         return deleteRequestBuilder.execute().actionGet();

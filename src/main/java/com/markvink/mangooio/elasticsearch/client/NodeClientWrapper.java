@@ -13,6 +13,14 @@ public class NodeClientWrapper implements ClientWrapper {
 
     private final Client nodeClient;
 
+    /**
+     * Instantiates a new node client wrapper.
+     *
+     * @param config
+     *            the Mangoo I/O config
+     * @param prefix
+     *            the prefix for the config keys
+     */
     public NodeClientWrapper(Config config, String prefix) {
         Builder settings = Settings.settingsBuilder();
         settings.put("cluster.name", config.getString(prefix.concat(".cluster.name")));
@@ -23,11 +31,23 @@ public class NodeClientWrapper implements ClientWrapper {
         nodeClient = createClient(settings.build());
     }
 
+    /**
+     * Creates the client.
+     *
+     * @param settings
+     *            the client settings
+     * @return the client
+     */
     private Client createClient(Settings settings) {
         Node node = nodeBuilder().settings(settings).node();
         return node.client();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.markvink.mangooio.elasticsearch.client.ClientWrapper#getClient()
+     */
     @Override
     public Client getClient() {
         return nodeClient;

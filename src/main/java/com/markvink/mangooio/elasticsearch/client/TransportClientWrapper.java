@@ -19,6 +19,14 @@ public class TransportClientWrapper implements ClientWrapper {
 
     private final TransportClient transportClient;
 
+    /**
+     * Instantiates a new transport client wrapper.
+     *
+     * @param config
+     *            the Mangoo I/O config
+     * @param prefix
+     *            the prefix for the config keys
+     */
     public TransportClientWrapper(Config config, String prefix) {
         Builder settings = Settings.settingsBuilder();
         settings.put("cluster.name", config.getString(prefix.concat(".cluster.name")));
@@ -35,6 +43,17 @@ public class TransportClientWrapper implements ClientWrapper {
         transportClient = createClient(settings.build(), host, port);
     }
 
+    /**
+     * Creates the client.
+     *
+     * @param settings
+     *            the client settings
+     * @param host
+     *            the host of the Elasticsearch node
+     * @param port
+     *            the port of the Elasticsearch node
+     * @return the client
+     */
     private TransportClient createClient(Settings settings, String host, int port) {
         TransportClient transportClient = TransportClient.builder().settings(settings).build();
 
@@ -51,17 +70,38 @@ public class TransportClientWrapper implements ClientWrapper {
         return transportClient;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.markvink.mangooio.elasticsearch.client.ClientWrapper#getClient()
+     */
     @Override
     public Client getClient() {
         return transportClient;
     }
 
+    /**
+     * Adds the node.
+     *
+     * @param address
+     *            the address of the Elasticsearch node
+     * @param port
+     *            the port of the Elasticsearch node
+     */
     public void addNode(InetAddress address, int port) {
         transportClient.addTransportAddress(new InetSocketTransportAddress(address, port));
 
         LOG.info("Node added {}:{}", address, port);
     }
 
+    /**
+     * Removes the node.
+     *
+     * @param address
+     *            the address of the Elasticsearch node
+     * @param port
+     *            the port of the Elasticsearch node
+     */
     public void removeNode(InetAddress address, int port) {
         transportClient.removeTransportAddress(new InetSocketTransportAddress(address, port));
 
