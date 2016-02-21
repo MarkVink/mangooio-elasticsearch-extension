@@ -17,7 +17,7 @@ public class TransportClientWrapper implements ClientWrapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransportClientWrapper.class);
 
-    private TransportClient transportClient;
+    private final TransportClient transportClient;
 
     public TransportClientWrapper(Config config, String prefix) {
         Builder settings = Settings.settingsBuilder();
@@ -32,14 +32,14 @@ public class TransportClientWrapper implements ClientWrapper {
         String host = config.getString(prefix.concat(".node.host"));
         int port = config.getInt(prefix.concat(".node.port"), 9300);
 
-        createClient(settings.build(), host, port);
+        transportClient = createClient(settings.build(), host, port);
     }
 
-    private void createClient(Settings settings, String host, int port) {
-        transportClient = TransportClient.builder().settings(settings).build();
+    private TransportClient createClient(Settings settings, String host, int port) {
+        TransportClient transportClient = TransportClient.builder().settings(settings).build();
 
         try {
-            addNewNode(InetAddress.getByName(host), port);
+            addNode(InetAddress.getByName(host), port);
         } catch (UnknownHostException e) {
             LOG.error("IP address of host could not be determined", e);
         }
@@ -47,6 +47,8 @@ public class TransportClientWrapper implements ClientWrapper {
         if (transportClient.connectedNodes().size() == 0) {
             LOG.warn("There are no active nodes available for the transport");
         }
+
+        return transportClient;
     }
 
     @Override
@@ -54,11 +56,15 @@ public class TransportClientWrapper implements ClientWrapper {
         return transportClient;
     }
 
-    public void addNewNode(InetAddress address, int port) {
+    public void addNode(InetAddress address, int port) {
         transportClient.addTransportAddress(new InetSocketTransportAddress(address, port));
+
+        LOG.info("Node added {}:{}", address, port);
     }
 
     public void removeNode(InetAddress address, int port) {
         transportClient.removeTransportAddress(new InetSocketTransportAddress(address, port));
+
+        LOG.info("Node removed {}:{}", address, port);
     }
 }

@@ -11,19 +11,21 @@ import io.mangoo.configuration.Config;
 
 public class NodeClientWrapper implements ClientWrapper {
 
-    private Client nodeClient;
+    private final Client nodeClient;
 
     public NodeClientWrapper(Config config, String prefix) {
         Builder settings = Settings.settingsBuilder();
         settings.put("cluster.name", config.getString(prefix.concat(".cluster.name")));
+        settings.put("path.home", config.getString(prefix.concat(".path.home")));
+        settings.put("index.store.type", config.getString(prefix.concat(".index.store.type")));
         settings.put("http.enabled", config.getBoolean(prefix.concat(".http.enabled"), false));
 
-        createClient(settings.build());
+        nodeClient = createClient(settings.build());
     }
 
-    private void createClient(Settings settings) {
-        Node node = nodeBuilder().node();
-        nodeClient = node.client();
+    private Client createClient(Settings settings) {
+        Node node = nodeBuilder().settings(settings).node();
+        return node.client();
     }
 
     @Override
