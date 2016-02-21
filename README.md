@@ -1,6 +1,6 @@
 [![Travis Build Status](https://travis-ci.org/MarkVink/mangooio-elasticsearch-extension.svg?branch=master)](http://travis-ci.org/MarkVink/mangooio-elasticsearch-extension)
 
-Elasticsearch extension for the mangoo I/O framework
+Elasticsearch extension for Mangoo I/O
 =====================
 This is an easly plugable extension for the mangoo I/O framework to work with Elasticsearch.
 
