@@ -3,19 +3,19 @@ package com.markvink.mangooio.elasticsearch.client;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.settings.Settings.Builder;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.mangoo.configuration.Config;
 
 public class TransportClientWrapper implements ClientWrapper {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TransportClientWrapper.class);
+    private static final Logger LOG = LogManager.getLogger(TransportClientWrapper.class);
 
     private final TransportClient transportClient;
 
@@ -58,7 +58,8 @@ public class TransportClientWrapper implements ClientWrapper {
         TransportClient transportClient = TransportClient.builder().settings(settings).build();
 
         try {
-            addNode(InetAddress.getByName(host), port);
+            InetSocketTransportAddress address = new InetSocketTransportAddress(InetAddress.getByName(host), port);
+            transportClient.addTransportAddress(address);
         } catch (UnknownHostException e) {
             LOG.error("IP address of host could not be determined", e);
         }
@@ -89,9 +90,8 @@ public class TransportClientWrapper implements ClientWrapper {
      *            the port of the Elasticsearch node
      */
     public void addNode(InetAddress address, int port) {
+        LOG.info("Add node {}:{}", address, port);
         transportClient.addTransportAddress(new InetSocketTransportAddress(address, port));
-
-        LOG.info("Node added {}:{}", address, port);
     }
 
     /**
@@ -103,8 +103,7 @@ public class TransportClientWrapper implements ClientWrapper {
      *            the port of the Elasticsearch node
      */
     public void removeNode(InetAddress address, int port) {
+        LOG.info("Remove node {}:{}", address, port);
         transportClient.removeTransportAddress(new InetSocketTransportAddress(address, port));
-
-        LOG.info("Node removed {}:{}", address, port);
     }
 }
