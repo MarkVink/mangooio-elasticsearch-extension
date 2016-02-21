@@ -9,7 +9,7 @@
 	<description>Elasticsearch extension for Mangoo I/O</description>
 	<url>https://github.com/MarkVink/mangooio-elasticsearch-extension</url>
 	<properties>
-		<mangooio.version>2.3.1</mangooio.version>
+		<mangooio.version>2.4.0</mangooio.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<developers>
