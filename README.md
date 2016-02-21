@@ -1,3 +1,5 @@
+[![Travis Build Status](https://travis-ci.org/MarkVink/mangooio-elasticsearch-extension.svg?branch=master)](http://travis-ci.org/MarkVink/mangooio-elasticsearch-extension)
+
 Hibernate extension for the mangoo I/O framework
 =====================
 This is an easly plugable extension for the mangoo I/O framework to work with Hibernate.
