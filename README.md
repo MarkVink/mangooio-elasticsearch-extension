@@ -1,3 +1,4 @@
+[![Maven Central](https://img.shields.io/maven-central/v/com.markvink/mangooio-elasticsearch-extension.svg)](http://search.maven.org/#search|ga|1|mangooio-elasticsearch-extension)
 [![Travis Build Status](https://travis-ci.org/MarkVink/mangooio-elasticsearch-extension.svg?branch=master)](http://travis-ci.org/MarkVink/mangooio-elasticsearch-extension)
 
 Elasticsearch extension for Mangoo I/O
