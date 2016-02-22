@@ -132,7 +132,10 @@ Indexing documents
     User user = new User("my-username");
     elasticsearch.indexDocument("my-index", user); // indexed using provided source
 
-4) Searching for documents (using client)
+Using client
+-----
+
+1) Use the normal Java client for searching for example
 
     SearchResponse response = elasticsearch.getClient().prepareSearch("my-index")
         .setTypes("User")
