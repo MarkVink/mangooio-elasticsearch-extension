@@ -131,3 +131,17 @@ Indexing documents
     
     User user = new User("my-username");
     elasticsearch.indexDocument("my-index", user); // indexed using provided source
+
+4) Searching for documents (using client)
+
+    SearchResponse response = elasticsearch.getClient().prepareSearch("my-index")
+        .setTypes("User")
+        .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+        .setQuery(QueryBuilders.termQuery("username", "my-username"))
+        .setFrom(0).setSize(60).setExplain(true)
+        .execute()
+        .actionGet();
+
+    long hits = response.getHits().getTotalHits();
+    SearchHit[] results = response.getHits().getHits();
+
