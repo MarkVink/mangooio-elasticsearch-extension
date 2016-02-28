@@ -16,7 +16,6 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.markvink.mangooio.elasticsearch.client.ClientWrapper;
@@ -33,8 +32,6 @@ import io.mangoo.configuration.Config;
 public class Elasticsearch implements ClientWrapper {
 
     private static final Logger LOG = LogManager.getLogger(Elasticsearch.class);
-
-    private static final ObjectMapper mapper = new ObjectMapper();
 
     private static final String CONFIG_PREFIX = "elasticsearch";
 
@@ -138,7 +135,7 @@ public class Elasticsearch implements ClientWrapper {
             indexRequestBuilder.setSource(((DocumentWithSource) document).getDocumentSource());
         } else {
             try {
-                indexRequestBuilder.setSource(mapper.writeValueAsBytes(document));
+                indexRequestBuilder.setSource(MapperUtil.writeValueAsBytes(document));
             } catch (JsonProcessingException e) {
                 LOG.error("Error converting source of document", e);
             }
